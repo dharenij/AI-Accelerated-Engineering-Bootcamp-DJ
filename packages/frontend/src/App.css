@@ -67,6 +67,9 @@ li {
   padding: 10px;
   border-bottom: 1px solid #ddd;
   text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 li:last-child {
@@ -76,4 +79,16 @@ li:last-child {
 .error {
   color: #d32f2f;
   font-weight: bold;
+}
+
+.delete-btn {
+  background-color: #d32f2f;
+  color: white;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  margin-left: 10px;
+}
+
+.delete-btn:hover {
+  background-color: #b71c1c;
 }
