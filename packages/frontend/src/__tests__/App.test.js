@@ -37,6 +37,15 @@ const server = setupServer(
         created_at: new Date().toISOString(),
       })
     );
+  }),
+
+  // DELETE /api/items/:id handler
+  rest.delete('/api/items/:id', (req, res, ctx) => {
+    const { id } = req.params;
+    return res(
+      ctx.status(200),
+      ctx.json({ message: 'Item deleted successfully', id: Number(id) })
+    );
   })
 );
 
@@ -50,7 +59,7 @@ describe('App Component', () => {
     await act(async () => {
       render(<App />);
     });
-    expect(screen.getByText('React Frontend with Node Backend')).toBeInTheDocument();
+    expect(screen.getByText('Hello World')).toBeInTheDocument();
     expect(screen.getByText('Connected to in-memory database')).toBeInTheDocument();
   });
 
@@ -96,6 +105,33 @@ describe('App Component', () => {
     await waitFor(() => {
       expect(screen.getByText('New Test Item')).toBeInTheDocument();
     });
+  });
+
+  test('deletes an item', async () => {
+    const user = userEvent.setup();
+
+    await act(async () => {
+      render(<App />);
+    });
+
+    // Wait for items to load
+    await waitFor(() => {
+      expect(screen.getByText('Test Item 1')).toBeInTheDocument();
+    });
+
+    // Click the first delete button
+    const deleteButtons = screen.getAllByText('Delete');
+    await act(async () => {
+      await user.click(deleteButtons[0]);
+    });
+
+    // Verify the item is removed from the list
+    await waitFor(() => {
+      expect(screen.queryByText('Test Item 1')).not.toBeInTheDocument();
+    });
+
+    // The other item should still be there
+    expect(screen.getByText('Test Item 2')).toBeInTheDocument();
   });
 
   test('handles API error', async () => {
